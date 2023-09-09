@@ -1,17 +1,21 @@
 from uuid import UUID
-from typing import Union
+from typing import Union, List
 
 from sqlalchemy import and_
 from sqlalchemy import select
 from sqlalchemy import update
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.models import User
+from db.models import User, Product
 
 
 ###########################################################
 # BLOCK FOR INTERACTION WITH DATABASE IN BUSINESS CONTEXT #
 ###########################################################
+
+
+# ###################### USER ########################### #
 
 
 class UserDAL:
@@ -58,3 +62,54 @@ class UserDAL:
         deleted_user_id_row = res.fetchone()
         if deleted_user_id_row is not None:
             return deleted_user_id_row[0]
+
+
+# ##################### PRODUCT ######################### #
+
+
+class ProductDAL:
+    """Data Access Layer for operating product info"""
+    def __init__(self, db_session: AsyncSession):
+        self.db_session = db_session
+
+    async def get_product_by_id(self, product_id: int) -> Union[Product, None]:
+        query = select(Product).where(Product.product_id == product_id)
+        res = await self.db_session.execute(query)
+        product = res.fetchone()
+        return product[0]
+
+    async def get_all_products(self) -> List[Product]:
+        query = select(Product)
+        res = await self.db_session.execute(query)
+        products = res.fetchall()
+        return products
+
+    async def create_product(self, name: str, price: float,
+                             small_description: str, size: str,
+                             characteristic: str,
+                             product_care: str) -> Product:
+        new_product = Product(name=name, price=price,
+                              small_description=small_description,
+                              size=size, characteristic=characteristic,
+                              product_care=product_care)
+        self.db_session.add(new_product)
+        await self.db_session.flush()
+        return new_product
+
+    async def update_product(self, product_id: int,
+                             **kwargs) -> Union[int, None]:
+        query = update(Product). \
+            where(Product.product_id == product_id). \
+            values(kwargs). \
+            returning(Product.product_id)
+        res = await self.db_session.execute(query)
+        updated_product_id = res.fetchone()
+        return updated_product_id[0]
+
+    async def delete_product(self, product_id: int) -> Union[int, None]:
+        query = delete(Product).\
+            where(Product.product_id == product_id).\
+            returning(Product.product_id)
+        res = await self.db_session.execute(query)
+        deleted_product_id = res.fetchone()
+        return deleted_product_id[0]

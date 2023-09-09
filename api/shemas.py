@@ -12,6 +12,8 @@ from pydantic import validator
 # BLOCK WITH API MODELS #
 #########################
 
+# ###################### USER ########################### #
+
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
 
@@ -85,33 +87,53 @@ class UpdateUserRequest(BaseModel):
         return value
 
 
-# class OrderBase(BaseModel):
-#     # Добавьте поля, соответствующие вашей модели Order
-#     pass
+# ##################### PRODUCT ######################### #
 
 
-# class OrderCreate(OrderBase):
-#     pass
+class ProductCreate(BaseModel):
+    name: str
+    price: float
+    size: str
+    small_description: str
+    characteristic: str
+    product_care: str
 
 
-# class Order(OrderBase):
-#     # Добавьте поля, соответствующие вашей модели Order
-
-#     class Config:
-#         orm_mode = True
-
-# # Аналогично создайте схемы для Address, Favorite и Cart
-
-
-# class ProductCategoryBase(BaseModel):
-#     productId: int
-#     categoryId: int
+class ShowProduct(TunedModel):
+    product_id: int
+    name: str
+    price: float
+    size: str
+    small_description: str
+    characteristic: str
+    product_care: str
 
 
-# class ProductCategoryCreate(ProductCategoryBase):
-#     pass
+class DeleteProductResponse(BaseModel):
+    deleted_product_id: int
 
 
-# class ProductCategory(ProductCategoryBase):
-#     class Config:
-#         orm_mode = True
+class UpdatedProductResponse(BaseModel):
+    updated_product_id: int
+
+
+class UpdateProductRequest(BaseModel):
+    name: Optional[constr(min_length=1)]
+    price: float
+    size: Optional[constr(min_length=1)]
+    small_description: Optional[constr(min_length=1)]
+    characteristic: Optional[constr(min_length=1)]
+    product_care: Optional[constr(min_length=1)]
+
+
+class ProductInDB(BaseModel):
+    product_id: int
+    name: str
+    price: float
+    size: str
+    small_description: str
+    characteristic: str
+    product_care: str
+
+
+# ##################### CATEGORY ######################### #
