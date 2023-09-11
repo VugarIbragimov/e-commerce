@@ -14,6 +14,7 @@ from api.shemas import (DeleteProductResponse, ShowProduct, ProductCreate,
 from db.dals import UserDAL, ProductDAL
 from db.models import User
 from db.session import get_db
+from hashing import Hasher
 
 
 # ###################### USER ########################### #
@@ -30,7 +31,7 @@ async def _create_new_user(body: UserCreate, db) -> ShowUser:
                 surname=body.surname,
                 email=body.email,
                 phone_number=body.phone_number,
-                hashed_password=body.hashed_password,
+                hashed_password=Hasher.get_password_hash(body.hashed_password),
             )
             return ShowUser(
                 user_id=user.user_id,
