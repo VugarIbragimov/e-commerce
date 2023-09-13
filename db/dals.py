@@ -7,7 +7,7 @@ from sqlalchemy import update
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.models import User, Product
+from db.models import User, Product, UserRole
 
 
 ###########################################################
@@ -32,14 +32,16 @@ class UserDAL:
 
     async def create_user(self, name: str, surname: str,
                           email: str, phone_number: str,
-                          hashed_password: str) -> User:
+                          hashed_password: str,
+                          roles: list[UserRole],) -> User:
 
         new_user = User(
             name=name,
             surname=surname,
             email=email,
             phone_number=phone_number,
-            hashed_password=hashed_password)
+            hashed_password=hashed_password,
+            roles=roles)
         self.db_session.add(new_user)
         await self.db_session.flush()
         return new_user

@@ -32,8 +32,7 @@ class User(Base):
     phone_number = Column(String, nullable=False)
     is_active = Column(Boolean(), default=True)
     hashed_password = Column(String, nullable=False)
-    roles = Column(ARRAY(String), default=UserRole.ROLE_USER,
-                   nullable=False)
+    roles = Column(ARRAY(String), nullable=False)
 
     orders = relationship('Order', back_populates='users')
     address = relationship("Address", back_populates="user", uselist=False)
