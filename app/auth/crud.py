@@ -1,0 +1,58 @@
+from typing import Union
+from uuid import UUID
+
+# from sqlalchemy import and_
+from sqlalchemy import select
+# from sqlalchemy import update
+
+from app.auth.models import User
+from sqlalchemy.ext.asyncio import AsyncSession
+
+
+###########################################################
+# BLOCK FOR INTERACTION WITH DATABASE IN BUSINESS CONTEXT #
+###########################################################
+
+
+class UserDAL:
+    """Data Access Layer for operating user info"""
+
+    def __init__(self, db_session: AsyncSession):
+        self.db_session = db_session
+
+    async def create_user(
+        self,
+        name: str,
+        surname: str,
+        email: str,
+        hashed_password: str,
+    ) -> User:
+        new_user = User(
+            name=name,
+            surname=surname,
+            email=email,
+            hashed_password=hashed_password,
+        )
+        self.db_session.add(new_user)
+        await self.db_session.flush()
+        return new_user
+
+    async def get_user_by_id(self, user_id: UUID) -> Union[User, None]:
+        query = select(User).where(User.user_id == user_id)
+        res = await self.db_session.execute(query)
+        user_row = res.fetchone()
+        if user_row is not None:
+            return user_row[0]
+
+
+# def get_user(db: Session, username: str):
+#     return db.query(User).filter(User.username == username).first()
+
+
+# def create_user(db: Session, user_create: schemas.UserCreate):
+#     db_user = User(username=user_create.username,
+        # hashed_password=hashed_password)
+#     db.add(db_user)
+#     db.commit()
+#     db.refresh(db_user)
+#     return db_user
