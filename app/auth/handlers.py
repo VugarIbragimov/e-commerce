@@ -10,6 +10,7 @@ from app.session import get_db
 
 from app.auth.shemas import ShowUser, UserCreate
 from app.auth.crud import UserDAL
+from app.auth.hashing import Hasher
 
 
 user_router = APIRouter()
@@ -25,7 +26,7 @@ async def _create_new_user(body: UserCreate, db) -> ShowUser:
                 name=body.name,
                 surname=body.surname,
                 email=body.email,
-                hashed_password=body.hashed_password
+                hashed_password=Hasher.get_password_hash(body.hashed_password),
             )
             return ShowUser(
                 user_id=user.user_id,

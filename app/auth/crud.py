@@ -44,15 +44,9 @@ class UserDAL:
         if user_row is not None:
             return user_row[0]
 
-
-# def get_user(db: Session, username: str):
-#     return db.query(User).filter(User.username == username).first()
-
-
-# def create_user(db: Session, user_create: schemas.UserCreate):
-#     db_user = User(username=user_create.username,
-        # hashed_password=hashed_password)
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     return db_user
+    async def get_user_by_email(self, email: str) -> Union[User, None]:
+        query = select(User).where(User.email == email)
+        res = await self.db_session.execute(query)
+        user_row = res.fetchone()
+        if user_row is not None:
+            return user_row[0]
