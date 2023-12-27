@@ -1,8 +1,11 @@
 import re
 import uuid
 
+from typing import Optional
+
 from pydantic import BaseModel
 from pydantic import EmailStr
+from pydantic import constr
 
 
 #########################
@@ -14,7 +17,7 @@ LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
 class TunedModel(BaseModel):
     class Config:
-        """tells pydantic to convert even non dict obj to json"""
+        """Tells pydantic to convert even non dict obj to json"""
         from_attributes = True
 
 
@@ -31,6 +34,20 @@ class UserCreate(BaseModel):
     surname: str
     email: EmailStr
     hashed_password: str
+
+
+class DeleteUserResponse(BaseModel):
+    deleted_user_id: uuid.UUID
+
+
+class UpdatedUserResponse(BaseModel):
+    updated_user_id: uuid.UUID
+
+
+class UpdateUserRequest(BaseModel):
+    name: Optional[constr(min_length=1)]
+    surname: Optional[constr(min_length=1)]
+    email: Optional[EmailStr]
 
 
 class Token(BaseModel):
