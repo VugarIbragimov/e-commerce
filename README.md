@@ -40,7 +40,7 @@ my_ecommerce_app/
 |-- celery_config.py
 
 what we need improve:
-- add handlers for user model and set jwt-check for him
+- add handlers for user model and set jwt-check for him - ok 
 - deploy project on vps(dockerfile, compose, makefile, CI/CD)
 - add sentry, grafana, promet
 
