@@ -2,7 +2,7 @@
 
 E-commerce project. An application framework that can be adapted for a future real project.
 
-### **Стек**
+### **Technology stack**
 ![python version](https://img.shields.io/badge/Python-3.9.6-red)
 ![fastapi version](https://img.shields.io/badge/aiogram-0.88.0-green)
 ![uvicorn version](https://img.shields.io/badge/uvicorn-0.20.0-purple)
