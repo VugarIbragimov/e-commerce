@@ -18,7 +18,7 @@ E-commerce project. An application framework that can be adapted for a future re
 ### Installation
 Clone the repository and go to it on the command line:
 ```
-git clone https://github.com/VugarIbragimov/foodgram-project-react
+git clone git@github.com:VugarIbragimov/e-commerce.git
 ```
 Launch a project via Docker
 ```
