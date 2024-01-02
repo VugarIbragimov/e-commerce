@@ -12,18 +12,56 @@ services:
       - "5432:5432"
     networks:
       - custom
-  db_test:
-    container_name: "db_test"
-    image: postgres:14.1-alpine
-    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  fast_app:
+    container_name: fast_app
+    image: fast_app
+    depends_on:
+      - db
     environment:
-      - POSTGRES_USER=postgres_test
-      - POSTGRES_PASSWORD=postgres_test
-      - POSTGRES_DB=postgres_test
+      REAL_DATABASE_URL: "postgresql+asyncpg://postgres:postgres@db:5432/postgres"
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "5433:5432"
+      - "8080:8080"
     networks:
       - custom
+  prometheus:
+    depends_on:
+      - fast_app
+    image: prom/prometheus:v2.43.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - custom
+
+  grafana:
+    image: grafana/grafana:8.5.22
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-config:/etc/grafana
+    depends_on:
+      - prometheus
+    restart: always
+    networks:
+      - custom
+    user: "0"
 networks:
   custom:
     driver: bridge
+volumes:
+  db-data:
+  grafana-data:
+  grafana-config:
+  prometheus-data:
