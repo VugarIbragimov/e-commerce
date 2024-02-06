@@ -1,4 +1,4 @@
-# E-commerce 
+# E-commerce (В данный момент реалзован код для users)
 
 E-commerce project. An application framework that can be adapted for a future real project.
 
@@ -28,14 +28,7 @@ Run migrations to the database(before these, you should create an alembic.ini fi
 ```
 docker-compose -f docker-compose-local.yaml exec fast_app alembic upgrade heads
 ```
-### API
-Here you can view the endpoints API documentation
-### link to the API: http://89.104.70.208:8080/docs#/
 
-### Monitoring with Prometheus and Grafan
-Login and password for enter to the grafana (admin:admin)
-### link to the Prometheus http://89.104.70.208:9090/
-### link to the Grafana http://89.104.70.208:3000/
 
 # !!!
 The project will evolve gradually and change over time. if you have comments and suggestions, I will be glad to listen to you!
